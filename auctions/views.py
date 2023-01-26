@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User
-
+from .models import Listing
 
 def index(request):
     return render(request, "auctions/index.html")
@@ -66,7 +66,20 @@ def new(request):
     return render(request, "auctions/new.html")
 
 def categories(request):
-    return render(request, "auctions/categories.html")
+    categories = []
+    for category in Listing.CATEGORIES:
+        categories.append(category[1])
+    return render(request, "auctions/categories.html", {
+        "categories" : categories
+    })
+
+def category(request, name):
+    ...
+    return render(request,"auctions/category.html", {
+        "name" : name,
+        #access all listings with that category
+        "listings" : Listing.objects.filter(category=name)
+    })
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html")
