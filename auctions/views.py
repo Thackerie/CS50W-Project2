@@ -73,13 +73,17 @@ def categories(request):
         "categories" : categories
     })
 
-def category(request, name):
-    ...
+def category(request, name:str):
+    number = name.split(" ")[1]
+    listings = Listing.objects.filter(category=number)
     return render(request,"auctions/category.html", {
         "name" : name,
         #access all listings with that category
-        "listings" : Listing.objects.filter(category=name)
+        "listings" : listings
     })
+
+def listing(request, name):
+    return render(request, "auctions/listing.html")
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html")

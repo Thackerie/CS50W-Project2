@@ -23,6 +23,8 @@ class Listing(models.Model):
     starting_price = models.FloatField()
     #use Listing.Comments.all() to get all related comments
     watchlisted = models.ManyToManyField(User, related_name="Watchlist", null=True, blank=True)
+    def __str__(self) -> str:
+        return f"{self.title}: {self.starting_price}"
     
 class Bid(models.Model):
     amount= models.FloatField()

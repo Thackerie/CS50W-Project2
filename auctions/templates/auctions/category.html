@@ -2,4 +2,7 @@
 
 {% block body %}
     <h1>{{ name }}</h1>
+    {% for listing in listings %}
+        <li><a href="{% url 'listing' listing %}">{{ listing }}</a></li>
+    {% endfor %}
 {% endblock %}
