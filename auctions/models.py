@@ -5,12 +5,12 @@ from django.db import models
 class User(AbstractUser):
     pass
 
+class Category(models.Model):
+    name= models.CharField(max_length=64,)
+    def __str__(self) ->str:
+        return f"{self.name}"
+
 class Listing(models.Model):
-    CATEGORIES = [
-        ("1","Category 1"),
-        ("2", "Category 2"),
-        ("3", "Category 3")
-    ]
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Listings")
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=200)
@@ -18,13 +18,15 @@ class Listing(models.Model):
     #image = models.ImageField()
 
     #multiple categories somehow
-    category = models.CharField(max_length=64, choices=CATEGORIES)
+    categories = models.ManyToManyField(Category, related_name="listings")
+    #category = models.CharField(max_length=64, choices=CATEGORIES)
 
     starting_price = models.FloatField()
     #use Listing.Comments.all() to get all related comments
     watchlisted = models.ManyToManyField(User, related_name="Watchlist", null=True, blank=True)
     def __str__(self) -> str:
-        return f"{self.title}: {self.starting_price}"
+        title = self.title.replace(" ","_")
+        return f"{title}"
     
 class Bid(models.Model):
     amount= models.FloatField()
