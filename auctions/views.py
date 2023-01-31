@@ -119,9 +119,13 @@ def listing(request, name):
     })
 
 def watchlist(request):
+    noResults = False
     username = request.user.username
     listingObjects = Listing.objects.filter(watchlisted__username= username)
     listings = make_listing_touple(listingObjects)
+    if len(listings) == 0:
+        noResults = True
     return render(request, "auctions/watchlist.html", {
-        "listings" : listings 
+        "listings" : listings,
+        "noResults" : noResults
     })

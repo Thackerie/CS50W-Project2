@@ -3,6 +3,11 @@
 {% block body %}
     <h2>Watchlist</h2>
     <br/>
+    {% if noResults == True %}
+        <h3>You have not yet watchlisted any items yet</h3>
+        <br/>
+        <h5>Go to <a href="{% url 'index' %}">Active Listings</a> to find listings you may be interested in or search by <a href="{% url 'categories' %}">Category</a></h5>
+    {% endif %}
     {% for listing in listings %}
         <li><a href="{% url 'listing' listing.0 %}"> {{ listing.1 }}</a></li>
     {% endfor %}
