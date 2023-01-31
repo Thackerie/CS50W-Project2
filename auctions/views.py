@@ -73,18 +73,36 @@ def categories(request):
     })
 
 def category(request, name:str):
+    #instanciating variables
     noResults = False
-    listings = Listing.objects.filter(categories__name=name)
+    listingNames = []
+    listings = []
+
+    #getting all listings labelled with category of name (name:str)
+    listingObjects = Listing.objects.filter(categories__name=name)
+    counter = 0
+    #itterating over all listings
+
+    for listing in listingObjects:
+        #adding names of the listings with removed underscores for pretttier looks to special list of names
+        listingNames.append(str(listing).replace("_"," ")) 
+        #adding name list and listing object list together in a list of touples
+        listings.append((listing, listingNames[counter])) 
+        counter += 1
+    
+    #checking if there are no listings found to display it on the page
     if len(listings) == 0:
         noResults = True
+    #rendering the page
     return render(request,"auctions/category.html", {
         "name" : name,
-        #access all listings with that category
         "listings" : listings,
         "noResults" : noResults
     })
 
 def listing(request, name):
+    #removing the underscores from the name for prettier looks
+    name = name.replace("_", " ")
     return render(request, "auctions/listing.html", {
         "name" : name
     })

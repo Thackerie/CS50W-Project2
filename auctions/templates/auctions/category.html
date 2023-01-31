@@ -7,6 +7,6 @@
         <h3>No items listed under "{{ name }}" yet</h3>
     {% endif %}
     {% for listing in listings %}
-        <li><a href="{% url 'listing' listing %}">{{ listing }}</a></li>
+        <li><a href="{% url 'listing' listing.0 %}"> {{ listing.1 }}</a></li>
     {% endfor %}
 {% endblock %}
