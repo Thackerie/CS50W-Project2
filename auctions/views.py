@@ -73,11 +73,15 @@ def categories(request):
     })
 
 def category(request, name:str):
+    noResults = False
     listings = Listing.objects.filter(categories__name=name)
+    if len(listings) == 0:
+        noResults = True
     return render(request,"auctions/category.html", {
         "name" : name,
         #access all listings with that category
-        "listings" : listings
+        "listings" : listings,
+        "noResults" : noResults
     })
 
 def listing(request, name):

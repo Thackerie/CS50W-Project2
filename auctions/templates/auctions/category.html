@@ -2,6 +2,10 @@
 
 {% block body %}
     <h1>{{ name }}</h1>
+    <br/>
+    {% if noResults == True %}
+        <h3>No items listed under "{{ name }}" yet</h3>
+    {% endif %}
     {% for listing in listings %}
         <li><a href="{% url 'listing' listing %}">{{ listing }}</a></li>
     {% endfor %}
