@@ -24,6 +24,8 @@ class Listing(models.Model):
     starting_price = models.FloatField()
     #use Listing.Comments.all() to get all related comments
     watchlisted = models.ManyToManyField(User, related_name="Watchlist", null=True, blank=True)
+    #active bool to check if bidding is still ongoing
+    #active = models.BooleanField()
     def __str__(self) -> str:
         title = self.title.replace(" ","_")
         return f"{title}"

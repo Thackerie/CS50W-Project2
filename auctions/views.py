@@ -6,9 +6,26 @@ from django.urls import reverse
 
 from .models import User, Listing, Category
 
-def index(request):
-    return render(request, "auctions/index.html")
+def make_listing_touple(listingObjects):
+    listingNames = []
+    listings = []
+    counter = 0
 
+    for listing in listingObjects:
+        #adding names of the listings with removed underscores for pretttier looks to special list of names
+        listingNames.append(str(listing).replace("_"," ")) 
+        #adding name list and listing object list together in a list of touples
+        listings.append((listing, listingNames[counter])) 
+        counter += 1
+    return listings
+
+def index(request):
+    listingObjects = Listing.objects.all()
+
+    listings = make_listing_touple(listingObjects)
+    return render(request, "auctions/index.html", {
+        "listings" : listings
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -66,6 +83,7 @@ def new(request):
 
 def categories(request):
     categories = []
+    #add underscore name thing too 
     for category in Category.objects.all():
         categories.append(category)
     return render(request, "auctions/categories.html", {
@@ -75,24 +93,17 @@ def categories(request):
 def category(request, name:str):
     #instanciating variables
     noResults = False
-    listingNames = []
-    listings = []
 
     #getting all listings labelled with category of name (name:str)
     listingObjects = Listing.objects.filter(categories__name=name)
-    counter = 0
-    #itterating over all listings
 
-    for listing in listingObjects:
-        #adding names of the listings with removed underscores for pretttier looks to special list of names
-        listingNames.append(str(listing).replace("_"," ")) 
-        #adding name list and listing object list together in a list of touples
-        listings.append((listing, listingNames[counter])) 
-        counter += 1
-    
+    #creating a list containing touples with listing object and name
+    listings = make_listing_touple(listingObjects)
+
     #checking if there are no listings found to display it on the page
     if len(listings) == 0:
         noResults = True
+
     #rendering the page
     return render(request,"auctions/category.html", {
         "name" : name,
@@ -108,4 +119,9 @@ def listing(request, name):
     })
 
 def watchlist(request):
-    return render(request, "auctions/watchlist.html")
+    username = request.user.username
+    listingObjects = Listing.objects.filter(watchlisted__username= username)
+    listings = make_listing_touple(listingObjects)
+    return render(request, "auctions/watchlist.html", {
+        "listings" : listings 
+    })
