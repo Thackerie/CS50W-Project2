@@ -4,7 +4,7 @@
     <h1>{{ name }}</h1>
     <br/>
     {% if noResults == True %}
-        <h3>No items listed under "{{ name }}" yet</h3>
+        <h3>No Active Listings Right Now</h3>
     {% endif %}
     {% for listing in listings %}
         <li><a href="{% url 'listing' listing.0 %}"> {{ listing.1 }}</a></li>

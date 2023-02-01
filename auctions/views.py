@@ -20,7 +20,7 @@ def make_listing_touple(listingObjects):
     return listings
 
 def index(request):
-    listingObjects = Listing.objects.all()
+    listingObjects = Listing.objects.filter(active__exact = True)
 
     listings = make_listing_touple(listingObjects)
     return render(request, "auctions/index.html", {
@@ -95,7 +95,7 @@ def category(request, name:str):
     noResults = False
 
     #getting all listings labelled with category of name (name:str)
-    listingObjects = Listing.objects.filter(categories__name=name)
+    listingObjects = Listing.objects.filter(active__exact = True).filter(categories__name=name)
 
     #creating a list containing touples with listing object and name
     listings = make_listing_touple(listingObjects)
@@ -121,7 +121,7 @@ def listing(request, name):
 def watchlist(request):
     noResults = False
     username = request.user.username
-    listingObjects = Listing.objects.filter(watchlisted__username= username)
+    listingObjects = Listing.objects.filter(active__exact = True).filter(watchlisted__username= username)
     listings = make_listing_touple(listingObjects)
     if len(listings) == 0:
         noResults = True
