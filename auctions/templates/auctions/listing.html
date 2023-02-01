@@ -3,4 +3,7 @@
 {% block body %}
     <h1>Listing</h1>
     <h1>{{ name }}</h1>
+    {% for point in data %}
+        <ul>{{ point }}</ul>
+    {% endfor %}
 {% endblock %}

@@ -114,8 +114,10 @@ def category(request, name:str):
 def listing(request, name):
     #removing the underscores from the name for prettier looks
     name = name.replace("_", " ")
+    data = Listing.objects.filter(title__exact = name).values()
     return render(request, "auctions/listing.html", {
-        "name" : name
+        "name" : name,
+        "data" : data[0]
     })
 
 def watchlist(request):
