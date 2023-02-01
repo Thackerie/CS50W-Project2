@@ -15,7 +15,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=200)
     creation_date = models.DateTimeField()
-    #image = models.ImageField()
+    image = models.ImageField(upload_to="listing_images", blank=True)
 
     #multiple categories somehow
     categories = models.ManyToManyField(Category, related_name="listings")
