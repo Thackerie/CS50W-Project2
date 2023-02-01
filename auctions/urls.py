@@ -13,5 +13,5 @@ urlpatterns = [
     path("categories", views.categories, name="categories"),
     path("watchlist", views.watchlist, name="watchlist"),
     path("categories/<str:name>", views.category, name="category"),
-    path("listing/<str:name>", views.listing, name="listing")
+    path("listings/<str:name>", views.listing, name="listing")
 ] + static (settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
