@@ -1,10 +1,49 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.conf import settings
+from django import forms
 
 from .models import User, Listing, Category
+
+class WatchlistForm(forms.Form):
+    watchlist = forms.BooleanField(widget=forms.HiddenInput(attrs={"value": "True", "name" : "watchlist"}))
+
+def watchlist(request):
+    noResults = False
+    id = request.user.id
+    listingObjects = Listing.objects.filter(active__exact = True).filter(watchlisted= id)
+    print(listingObjects)
+    listings = make_listing_touple(listingObjects)
+    if len(listings) == 0:
+        noResults = True
+    return render(request, "auctions/watchlist.html", {
+        "listings" : listings,
+        "noResults" : noResults
+    })
+
+def listing(request, name):
+    data = Listing.objects.filter(title__exact = name.replace("_"," ")).values()
+    if request.method == "POST":
+        form = WatchlistForm(request.POST)
+        if form.is_valid():
+            username = request.user.username
+            value = form.cleaned_data["watchlist"]
+            print(value)
+            user = User.objects.get(username=username)
+            user.watchlist.add(data[0]["id"])
+            user.save()
+    #getting the data that is related to the given name of a listing
+    
+
+    return render(request, "auctions/listing.html", {
+        "name" : name,
+        "root" : settings.MEDIA_URL,
+        "form" : WatchlistForm(),
+        "data" : data[0]
+    })
 
 def make_listing_touple(listingObjects):
     listingNames = []
@@ -107,27 +146,6 @@ def category(request, name:str):
     #rendering the page
     return render(request,"auctions/category.html", {
         "name" : name,
-        "listings" : listings,
-        "noResults" : noResults
-    })
-
-def listing(request, name):
-    #removing the underscores from the name for prettier looks
-    name = name.replace("_", " ")
-    data = Listing.objects.filter(title__exact = name).values()
-    return render(request, "auctions/listing.html", {
-        "name" : name,
-        "data" : data[0]
-    })
-
-def watchlist(request):
-    noResults = False
-    username = request.user.username
-    listingObjects = Listing.objects.filter(active__exact = True).filter(watchlisted__username= username)
-    listings = make_listing_touple(listingObjects)
-    if len(listings) == 0:
-        noResults = True
-    return render(request, "auctions/watchlist.html", {
         "listings" : listings,
         "noResults" : noResults
     })

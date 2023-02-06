@@ -1,9 +1,21 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h1>Listing</h1>
-    <h1>{{ name }}</h1>
-    {% for point in data %}
-        <ul>{{ point }}</ul>
-    {% endfor %}
+<div class="container-fluid">
+    <h1>Listing: {{ data.title }}</h1>
+    <form action="{{ name }}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-secondary" value="Watchlist">
+    </form>
+    
+    <div class="image-div">
+        {% if data.image != "" %}
+            <img src="{{root}}/{{ data.image }}" width="1000px" alt="">
+        {% else %}
+            <h3>No Product Picture</h3>
+        {% endif %}
+    </div>
+</div>
+    
 {% endblock %}
