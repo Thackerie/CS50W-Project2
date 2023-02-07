@@ -31,12 +31,10 @@ def listing(request, name):
         if form.is_valid():
             username = request.user.username
             value = form.cleaned_data["watchlist"]
-            print(value)
             user = User.objects.get(username=username)
             user.watchlist.add(data[0]["id"])
             user.save()
     #getting the data that is related to the given name of a listing
-    
 
     return render(request, "auctions/listing.html", {
         "name" : name,

@@ -11,10 +11,23 @@
     
     <div class="image-div">
         {% if data.image != "" %}
-            <img src="{{root}}/{{ data.image }}" width="1000px" alt="">
+            <img src="{{root}}/{{ data.image }}" width="750px" alt="Listing Image" height="500px">
         {% else %}
-            <h3>No Product Picture</h3>
+            <h2>No Product Picture</h2>
         {% endif %}
+    </div>
+    <div>
+        <h4>{{ data.description}}</h4>
+    </div>
+    <div>
+        <h4>{{ data.starting_price}} Dubloons</h4>
+    </div>
+    <div>
+        Details:
+        <ul>
+           <li>Figure out how to acces owner field using foreign key for owner_id</li>
+           <li>display ManyToManyField categories using for loop</li>
+        </ul>
     </div>
 </div>
     
