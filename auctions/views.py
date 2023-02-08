@@ -15,7 +15,6 @@ def watchlist(request):
     noResults = False
     id = request.user.id
     listingObjects = Listing.objects.filter(active__exact = True).filter(watchlisted= id)
-    print(listingObjects)
     listings = make_listing_touple(listingObjects)
     if len(listings) == 0:
         noResults = True
