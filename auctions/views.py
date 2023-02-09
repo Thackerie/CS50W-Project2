@@ -7,9 +7,27 @@ from django.conf import settings
 from django import forms
 
 from .models import User, Listing, Category
-
 class WatchlistForm(forms.Form):
     watchlist = forms.BooleanField(widget=forms.HiddenInput(attrs={"value": "True", "name" : "watchlist"}))
+
+class NewListingForm(forms.Form):
+    choices = []
+    categories = Category.objects.all()
+    categoryCount = 1 
+    for category in categories:
+        choices.append((categoryCount, str(category)))
+        categoryCount+= 1
+    title = forms.CharField()
+    description = forms.CharField()
+    image = forms.ImageField(required=False)
+    startingPrice = forms.FloatField()
+    categories = forms.MultipleChoiceField(choices=choices, required=False)
+
+def new(request):
+    return render(request, "auctions/new.html", {
+        "form": NewListingForm()
+    })
+
 
 def watchlist(request):
     noResults = False
@@ -113,9 +131,6 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
-
-def new(request):
-    return render(request, "auctions/new.html")
 
 def categories(request):
     categories = []

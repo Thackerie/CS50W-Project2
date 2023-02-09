@@ -2,6 +2,9 @@
 
 {% block body %}
     <h2>New Listing</h2>
-
-    TODO
+    <form action="{% url 'new' %}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-secondary" value="Create Listing">
+    </form>
 {% endblock %}
