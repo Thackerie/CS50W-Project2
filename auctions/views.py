@@ -24,31 +24,33 @@ class NewListingForm(forms.Form):
     categories = forms.MultipleChoiceField(choices=choices, required=False)
 
 def new(request):
+    if request.method == "POST":
+        form = NewListingForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            id = len(Listing.objects.all())+1
+            title = form.cleaned_data["title"]
+            description = form.cleaned_data["description"]
+            startingPrice = form.cleaned_data["startingPrice"]
+            image = form.cleaned_data["image"]
+            categories = form.cleaned_data["categories"]
+            listing = Listing(id=id, owner=user,title=title, description=description, starting_price=startingPrice, image=image, active=True)
+            listing.save()
+            listing.categories.set(categories)
+           
+            
     return render(request, "auctions/new.html", {
         "form": NewListingForm()
     })
 
-
-def watchlist(request):
-    noResults = False
-    id = request.user.id
-    listingObjects = Listing.objects.filter(active__exact = True).filter(watchlisted= id)
-    listings = make_listing_touple(listingObjects)
-    if len(listings) == 0:
-        noResults = True
-    return render(request, "auctions/watchlist.html", {
-        "listings" : listings,
-        "noResults" : noResults
-    })
 
 def listing(request, name):
     data = Listing.objects.filter(title__exact = name.replace("_"," ")).values()
     if request.method == "POST":
         form = WatchlistForm(request.POST)
         if form.is_valid():
-            username = request.user.username
             value = form.cleaned_data["watchlist"]
-            user = User.objects.get(username=username)
+            user = User.objects.get(username=request.user.username)
             user.watchlist.add(data[0]["id"])
             user.save()
     #getting the data that is related to the given name of a listing
@@ -158,6 +160,18 @@ def category(request, name:str):
     #rendering the page
     return render(request,"auctions/category.html", {
         "name" : name,
+        "listings" : listings,
+        "noResults" : noResults
+    })
+
+def watchlist(request):
+    noResults = False
+    id = request.user.id
+    listingObjects = Listing.objects.filter(active__exact = True).filter(watchlisted= id)
+    listings = make_listing_touple(listingObjects)
+    if len(listings) == 0:
+        noResults = True
+    return render(request, "auctions/watchlist.html", {
         "listings" : listings,
         "noResults" : noResults
     })

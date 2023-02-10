@@ -14,18 +14,14 @@ class Listing(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Listings")
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=200)
-    creation_date = models.DateTimeField()
     image = models.ImageField(upload_to="listing_images", blank=True)
 
-    #multiple categories somehow
     categories = models.ManyToManyField(Category, related_name="listings")
-    #category = models.CharField(max_length=64, choices=CATEGORIES)
 
     starting_price = models.FloatField()
 
-    #use Listing.Comments.all() to get all related comments
-
     watchlisted = models.ManyToManyField(User, related_name="watchlist", null=True, blank=True)
+
     #active bool to check if bidding is still ongoing
     active = models.BooleanField()
     def __str__(self) -> str:
