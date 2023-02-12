@@ -4,35 +4,22 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
-from django import forms
 
+from .forms import NewListingForm, WatchlistForm
 from .models import User, Listing, Category
-class WatchlistForm(forms.Form):
-    watchlist = forms.BooleanField(widget=forms.HiddenInput(attrs={"value": "True", "name" : "watchlist"}))
 
-class NewListingForm(forms.Form):
-    choices = []
-    categories = Category.objects.all()
-    categoryCount = 1 
-    for category in categories:
-        choices.append((categoryCount, str(category)))
-        categoryCount+= 1
-    title = forms.CharField()
-    description = forms.CharField()
-    image = forms.ImageField(required=False)
-    startingPrice = forms.FloatField()
-    categories = forms.MultipleChoiceField(choices=choices, required=False)
+
 
 def new(request):
     if request.method == "POST":
-        form = NewListingForm(request.POST)
+        form = NewListingForm(request.POST, request.FILES)
         if form.is_valid():
             user = request.user
             id = len(Listing.objects.all())+1
             title = form.cleaned_data["title"]
             description = form.cleaned_data["description"]
             startingPrice = form.cleaned_data["startingPrice"]
-            image = form.cleaned_data["image"]
+            image = "listing_images/"+ form.data["image"].replace(" ","_")
             categories = form.cleaned_data["categories"]
             listing = Listing(id=id, owner=user,title=title, description=description, starting_price=startingPrice, image=image, active=True)
             listing.save()
