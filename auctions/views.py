@@ -63,11 +63,16 @@ def make_listing_touple(listingObjects):
     return listings
 
 def index(request):
+    noResults = False
+
     listingObjects = Listing.objects.filter(active__exact = True)
 
     listings = make_listing_touple(listingObjects)
+    if len(listings) == 0:
+        noResults = True
     return render(request, "auctions/index.html", {
-        "listings" : listings
+        "listings" : listings,
+        "noResults" : noResults
     })
 
 def login_view(request):
