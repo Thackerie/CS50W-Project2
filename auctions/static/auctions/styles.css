@@ -1,3 +1,12 @@
 body {
     padding: 10px;
 }
+
+.listing {
+    border:1px solid black;
+    margin-bottom: 10px;
+}
+
+a:link {
+    color: black;
+}

@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.conf import settings
 
 from .forms import NewListingForm, WatchlistForm
-from .models import User, Listing, Category
+from .models import User, Listing, Category, Bid
 
 
 
@@ -50,29 +50,38 @@ def listing(request, name):
     })
 
 def make_listing_touple(listingObjects):
-    listingNames = []
     listings = []
-    counter = 0
-
+    highestBid = None
     for listing in listingObjects:
-        #adding names of the listings with removed underscores for pretttier looks to special list of names
-        listingNames.append(str(listing).replace("_"," ")) 
+        amount= 0
+        #getting the highest bid for that listing
+        for bid in Bid.objects.filter(listing=listing) :
+            try:
+                if bid.amount > amount:
+                    amount = bid.amount
+                    highestBid = bid
+            except IndexError:
+                pass
         #adding name list and listing object list together in a list of touples
-        listings.append((listing, listingNames[counter])) 
-        counter += 1
+        listings.append((listing, str(listing).replace("_"," "), highestBid))
+        highestBid = None
+
     return listings
 
 def index(request):
     noResults = False
-
+    noBids = False
     listingObjects = Listing.objects.filter(active__exact = True)
-
     listings = make_listing_touple(listingObjects)
+    #listings.append(Bid.objects.filter(listing=1))
     if len(listings) == 0:
         noResults = True
+    if listings[2] == None:
+        noBids = True
     return render(request, "auctions/index.html", {
         "listings" : listings,
-        "noResults" : noResults
+        "noResults" : noResults,
+        "noBids" : noBids
     })
 
 def login_view(request):
