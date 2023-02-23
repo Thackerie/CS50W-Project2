@@ -32,21 +32,34 @@ def new(request):
 
 
 def listing(request, name):
-    data = Listing.objects.filter(title__exact = name.replace("_"," ")).values()
+    #getting listing object from name given
+    listing = Listing.objects.filter(title__exact = name.replace("_"," "))
+    #getting all data from the listing object
+    data = listing.values()
+    #handling watchlist button
     if request.method == "POST":
+        #instatiating the form
         form = WatchlistForm(request.POST)
         if form.is_valid():
-            value = form.cleaned_data["watchlist"]
+            #instatiating user object based on the name in the request
             user = User.objects.get(username=request.user.username)
+            #adding the listing to the user using its id
             user.watchlist.add(data[0]["id"])
             user.save()
-    #getting the data that is related to the given name of a listing
+
+    #getting correlating user object of the owner of the listing using the owner_id
+    owner = User.objects.filter(id__exact = data[0]["owner_id"])[0]
+
+    #getting all category objects related to the listing object
+    categories = listing[0].categories.all()
 
     return render(request, "auctions/listing.html", {
         "name" : name,
         "root" : settings.MEDIA_URL,
         "form" : WatchlistForm(),
-        "data" : data[0]
+        "data" : data[0],
+        "owner" : owner,
+        "categories" : categories
     })
 
 def make_listing_touple(listingObjects):

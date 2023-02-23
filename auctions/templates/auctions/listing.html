@@ -25,8 +25,16 @@
     <div>
         Details:
         <ul>
-           <li>Figure out how to acces owner field using foreign key for owner_id</li>
-           <li>display ManyToManyField categories using for loop</li>
+           <li>Listed by: <a href="{% url 'index' %}">{{ owner }}</a></li>
+           <li>Categories:
+                <ul>
+                    {% for category in categories %}
+                        <li>
+                            <a href="{% url 'category' category %}">{{ category }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+           </li>
         </ul>
     </div>
 </div>
