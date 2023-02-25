@@ -17,3 +17,7 @@ class NewListingForm(forms.Form):
     image = forms.ImageField(required=False)
     startingPrice = forms.FloatField()
     categories = forms.MultipleChoiceField(choices=choices, required=False)
+
+class BidForm(forms.Form):
+    bid = forms.FloatField(initial=1)
+    

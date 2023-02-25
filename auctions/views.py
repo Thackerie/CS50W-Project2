@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
 
-from .forms import NewListingForm, WatchlistForm
+from .forms import NewListingForm, WatchlistForm, BidForm
 from .models import User, Listing, Category, Bid
 
 
@@ -38,14 +38,19 @@ def listing(request, name):
     data = listing.values()
     #handling watchlist button
     if request.method == "POST":
+        user = User.objects.get(username=request.user.username)
         #instatiating the form
-        form = WatchlistForm(request.POST)
-        if form.is_valid():
+        watchlistForm = WatchlistForm(request.POST)
+        if watchlistForm.is_valid():
             #instatiating user object based on the name in the request
-            user = User.objects.get(username=request.user.username)
             #adding the listing to the user using its id
             user.watchlist.add(data[0]["id"])
             user.save()
+        
+        bidForm = BidForm(request.POST)
+        if bidForm.is_valid():
+            bid = Bid(amount= bidForm.cleaned_data["bid"], bidder=user, listing=listing[0])
+            bid.save()
 
     #getting correlating user object of the owner of the listing using the owner_id
     owner = User.objects.filter(id__exact = data[0]["owner_id"])[0]
@@ -56,7 +61,8 @@ def listing(request, name):
     return render(request, "auctions/listing.html", {
         "name" : name,
         "root" : settings.MEDIA_URL,
-        "form" : WatchlistForm(),
+        "watchlistForm" : WatchlistForm(),
+        "bidForm" : BidForm(),
         "data" : data[0],
         "owner" : owner,
         "categories" : categories
