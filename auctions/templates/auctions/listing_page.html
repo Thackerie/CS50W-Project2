@@ -10,12 +10,12 @@
     {% for listing in listings %}
         <a href="{% url 'listing' listing.0 %}" style="color: black; text-decoration: none;">
             <div class="listing">
-                    {% if listing.2 == None %}
-                        <h4>No Bids yet</h4>
-                    {% else %}
-                        <h3>{{ listing.2.amount }}</h3>
-                    {% endif %}
-                {{ listing.1}}
+                {% if listing.2 == None %}
+                    <h5>No Bids yet</h5>
+                {% else %}
+                    <h5>{{ listing.2.amount }} Dobloons</h5>
+                {% endif %}
+                <h3>{{ listing.1}}</h3>
             </div>
         </a>
     {% endfor %}    
