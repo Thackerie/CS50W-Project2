@@ -19,17 +19,15 @@ def new(request):
             title = form.cleaned_data["title"]
             description = form.cleaned_data["description"]
             startingPrice = form.cleaned_data["startingPrice"]
-            image = "listing_images/"+ form.data["image"].replace(" ","_")
+            image = request.FILES["image"]
             categories = form.cleaned_data["categories"]
             listing = Listing(id=id, owner=user,title=title, description=description, starting_price=startingPrice, image=image, active=True)
             listing.save()
             listing.categories.set(categories)
            
-            
     return render(request, "auctions/new.html", {
         "form": NewListingForm()
     })
-
 
 def listing(request, name):
     #getting listing object from name given
@@ -57,7 +55,6 @@ def listing(request, name):
 
     #getting all category objects related to the listing object
     categories = listing[0].categories.all()
-
     return render(request, "auctions/listing.html", {
         "name" : name,
         "root" : settings.MEDIA_URL,
