@@ -9,6 +9,6 @@
         <h5>Go to <a href="{% url 'index' %}">Active Listings</a> to find listings you may be interested in or search by <a href="{% url 'categories' %}">Category</a></h5>
     {% endif %}
     {% for listing in listings %}
-        <li><a href="{% url 'listing' listing.0 %}"> {{ listing.1 }}</a></li>
+        <li><a href="{% url 'listing' listing.1 %}"> {{ listing.0.title }}</a></li>
     {% endfor %}
 {% endblock %}

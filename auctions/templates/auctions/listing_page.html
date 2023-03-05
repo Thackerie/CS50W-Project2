@@ -8,14 +8,14 @@
         <h3>No Active Listings Right Now</h3>
     {% endif %}
     {% for listing in listings %}
-        <a href="{% url 'listing' listing.0 %}" style="color: black; text-decoration: none;">
+        <a href="{% url 'listing' listing.1 %}" style="color: black; text-decoration: none;">
             <div class="listing">
                 {% if listing.2 == None %}
                     <h5>No Bids yet</h5>
                 {% else %}
                     <h5>{{ listing.2.amount }} Dobloons</h5>
                 {% endif %}
-                <h3>{{ listing.1}}</h3>
+                <h3>{{ listing.0.title}}</h3>
             </div>
         </a>
     {% endfor %}    
