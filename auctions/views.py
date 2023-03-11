@@ -99,6 +99,7 @@ def index(request):
     return render(request, "auctions/index.html", {
         "listings" : listings,
         "noResults" : noResults,
+        "root" : settings.MEDIA_URL,
         "noBids" : noBids
     })
 
