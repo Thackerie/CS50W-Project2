@@ -70,21 +70,27 @@ def make_listing_touple(listingObjects):
     highestBid = None
     #looping over dicts containing the values of one listing per dict
     for listing in listingObjects.values():
-        amount= 0
+        
         #getting the highest bid for that listing
-        for bid in Bid.objects.filter(listing=listing["id"]) :
-            try:
-                if bid.amount > amount:
-                    amount = bid.amount
-                    highestBid = bid
-            except IndexError:
-                pass
+        highestBid = get_highest_bid(listing)
 
         #adding name list and listing object list together in a list of touples
         listings.append((listing, listing["title"].replace(" ", "_"), highestBid))
         highestBid = None
 
     return listings
+
+def get_highest_bid(listing):
+    amount= 0
+    highestBid = None
+    for bid in Bid.objects.filter(listing=listing["id"]) :
+            try:
+                if bid.amount > amount:
+                    amount = bid.amount
+                    highestBid = bid
+            except IndexError:
+                pass
+    return highestBid
 
 def index(request):
     noResults = False
