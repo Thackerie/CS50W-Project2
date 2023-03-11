@@ -60,6 +60,7 @@ def listing(request, name):
         "root" : settings.MEDIA_URL,
         "watchlistForm" : WatchlistForm(),
         "bidForm" : BidForm(),
+        "highestBid" : get_highest_bid(data[0]).amount,
         "data" : data[0],
         "owner" : owner,
         "categories" : categories
@@ -70,7 +71,7 @@ def make_listing_touple(listingObjects):
     highestBid = None
     #looping over dicts containing the values of one listing per dict
     for listing in listingObjects.values():
-        
+
         #getting the highest bid for that listing
         highestBid = get_highest_bid(listing)
 
@@ -83,7 +84,7 @@ def make_listing_touple(listingObjects):
 def get_highest_bid(listing):
     amount= 0
     highestBid = None
-    for bid in Bid.objects.filter(listing=listing["id"]) :
+    for bid in Bid.objects.filter(listing=listing["id"]):
             try:
                 if bid.amount > amount:
                     amount = bid.amount

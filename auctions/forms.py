@@ -20,4 +20,3 @@ class NewListingForm(forms.Form):
 
 class BidForm(forms.Form):
     bid = forms.FloatField(initial=1)
-    
