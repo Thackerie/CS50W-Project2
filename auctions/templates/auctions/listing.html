@@ -20,7 +20,14 @@
         <h4>{{ data.description}}</h4>
     </div>
     <div>
-        <h4>Highest Bid: {{ highestBid }}$</h4>
+        <h4>
+            {% if highestBid == None %}   
+                Price: {{ data.starting_price }}$
+            {% else %}
+                Highest Bid: {{ highestBid.amount }}$
+            {% endif %}
+            
+        </h4>
     </div>
     <div>
         Details:

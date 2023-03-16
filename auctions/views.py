@@ -55,12 +55,13 @@ def listing(request, name):
 
     #getting all category objects related to the listing object
     categories = listing[0].categories.all()
+
     return render(request, "auctions/listing.html", {
         "name" : name,
         "root" : settings.MEDIA_URL,
         "watchlistForm" : WatchlistForm(),
         "bidForm" : BidForm(),
-        "highestBid" : get_highest_bid(data[0]).amount,
+        "highestBid" : get_highest_bid(data[0]),
         "data" : data[0],
         "owner" : owner,
         "categories" : categories
@@ -82,7 +83,7 @@ def make_listing_touple(listingObjects):
     return listings
 
 def get_highest_bid(listing):
-    amount= 0
+    amount = listing["starting_price"]
     highestBid = None
     for bid in Bid.objects.filter(listing=listing["id"]):
             try:
@@ -103,6 +104,7 @@ def index(request):
         noResults = True
     if listings[2] == None:
         noBids = True
+
     return render(request, "auctions/index.html", {
         "listings" : listings,
         "noResults" : noResults,

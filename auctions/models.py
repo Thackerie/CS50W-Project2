@@ -22,6 +22,7 @@ class Listing(models.Model):
 
     watchlisted = models.ManyToManyField(User, related_name="watchlist", null=True, blank=True)
 
+    creation_date_time = models.DateTimeField(auto_now_add=True)
     #active bool to check if bidding is still ongoing
     active = models.BooleanField()
     def __str__(self) -> str:
