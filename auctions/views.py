@@ -33,6 +33,8 @@ def new(request):
 def listing(request, name):
     #getting listing object from name given
     listing = Listing.objects.get(title__exact = name.replace("_"," "))
+    highestBid = get_highest_bid(listing)
+    lowbid = False
     #handling watchlist button
     if request.method == "POST":
         user = User.objects.get(username=request.user.username)
@@ -46,20 +48,17 @@ def listing(request, name):
         
         bidForm = BidForm(request.POST)
         if bidForm.is_valid():
-            bid = Bid(amount= bidForm.cleaned_data["bid"], bidder=user, listing=listing)
-            bid.save()
+            if bidForm.cleaned_data["bid"] > listing.starting_price and highestBid == None or (highestBid != None and bidForm.cleaned_data["bid"] > highestBid.amount):
+                bid = Bid(amount= bidForm.cleaned_data["bid"], bidder=user, listing=listing)
+                bid.save()
+            else:
+                lowbid = True
 
         closeForm = CloseForm(request.POST)
         if closeForm.is_valid():
             
             listing.active = False
             listing.save(update_fields=["active"])
-
-    #getting correlating user object of the owner of the listing using the owner_id
-    owner = User.objects.get(id__exact = listing.owner.id)
-
-    #getting all category objects related to the listing object
-    categories = listing.categories.all()
 
     return render(request, "auctions/listing.html", {
         "name" : name,
@@ -69,8 +68,9 @@ def listing(request, name):
         "closeForm" : CloseForm(),
         "highestBid" : get_highest_bid(listing),
         "listing" : listing,
-        "owner" : owner,
-        "categories" : categories
+        "owner" : User.objects.get(id__exact = listing.owner.id),
+        "categories" : listing.categories.all(),
+        "lowBid" : lowbid
     })
 
 def make_listing_touple(listingObjects):

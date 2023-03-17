@@ -53,6 +53,9 @@
                 <input type="submit" class="btn btn-secondary" value="Place Bid">
             </form>
         {% endif %}
+        {% if lowBid == True %}
+            <h2 style="color: red;">Bid too low</h2>
+        {% endif %}
     </div>
     <br>
     {% if user.id == listing.owner_id %}
