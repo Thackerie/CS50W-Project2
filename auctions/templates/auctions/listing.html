@@ -54,6 +54,14 @@
             </form>
         {% endif %}
     </div>
+    <br>
+    {% if user.id == data.owner_id %}
+    <form action="{{ name }}" method="POST" >
+        {% csrf_token %}
+        {{ closeForm }}
+        <input type="submit" class="btn btn-danger" value="Close Bidding">
+    </form>
+    {% endif %}
 </div>
     
 {% endblock %}

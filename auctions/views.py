@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
 
-from .forms import NewListingForm, WatchlistForm, BidForm
+from .forms import NewListingForm, WatchlistForm, BidForm, CloseForm
 from .models import User, Listing, Category, Bid
 
 
@@ -51,6 +51,12 @@ def listing(request, name):
             bid = Bid(amount= bidForm.cleaned_data["bid"], bidder=user, listing=listing[0])
             bid.save()
 
+        closeForm = CloseForm(request.POST)
+        if closeForm.is_valid():
+            listingobject = Listing.objects.get(title__exact = name.replace("_"," "))
+            listingobject.active = False
+            listingobject.save(update_fields=["active"])
+
     #getting correlating user object of the owner of the listing using the owner_id
     owner = User.objects.filter(id__exact = data[0]["owner_id"])[0]
 
@@ -62,6 +68,7 @@ def listing(request, name):
         "root" : settings.MEDIA_URL,
         "watchlistForm" : WatchlistForm(),
         "bidForm" : BidForm(),
+        "closeForm" : CloseForm(),
         "highestBid" : get_highest_bid(data[0]),
         "data" : data[0],
         "owner" : owner,

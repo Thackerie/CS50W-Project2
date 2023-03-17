@@ -20,3 +20,6 @@ class NewListingForm(forms.Form):
 
 class BidForm(forms.Form):
     bid = forms.FloatField(initial=1)
+
+class CloseForm(forms.Form):
+    closed = forms.BooleanField(widget=forms.HiddenInput(attrs={"value": "True", "name" : "close"}))
