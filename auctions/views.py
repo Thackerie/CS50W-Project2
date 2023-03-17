@@ -32,9 +32,7 @@ def new(request):
 
 def listing(request, name):
     #getting listing object from name given
-    listing = Listing.objects.filter(title__exact = name.replace("_"," "))
-    #getting all data from the listing object
-    data = listing.values()
+    listing = Listing.objects.get(title__exact = name.replace("_"," "))
     #handling watchlist button
     if request.method == "POST":
         user = User.objects.get(username=request.user.username)
@@ -43,25 +41,25 @@ def listing(request, name):
         if watchlistForm.is_valid():
             #instatiating user object based on the name in the request
             #adding the listing to the user using its id
-            user.watchlist.add(data[0]["id"])
+            user.watchlist.add(listing.id)
             user.save()
         
         bidForm = BidForm(request.POST)
         if bidForm.is_valid():
-            bid = Bid(amount= bidForm.cleaned_data["bid"], bidder=user, listing=listing[0])
+            bid = Bid(amount= bidForm.cleaned_data["bid"], bidder=user, listing=listing)
             bid.save()
 
         closeForm = CloseForm(request.POST)
         if closeForm.is_valid():
-            listingobject = Listing.objects.get(title__exact = name.replace("_"," "))
-            listingobject.active = False
-            listingobject.save(update_fields=["active"])
+            
+            listing.active = False
+            listing.save(update_fields=["active"])
 
     #getting correlating user object of the owner of the listing using the owner_id
-    owner = User.objects.filter(id__exact = data[0]["owner_id"])[0]
+    owner = User.objects.get(id__exact = listing.owner.id)
 
     #getting all category objects related to the listing object
-    categories = listing[0].categories.all()
+    categories = listing.categories.all()
 
     return render(request, "auctions/listing.html", {
         "name" : name,
@@ -69,8 +67,8 @@ def listing(request, name):
         "watchlistForm" : WatchlistForm(),
         "bidForm" : BidForm(),
         "closeForm" : CloseForm(),
-        "highestBid" : get_highest_bid(data[0]),
-        "data" : data[0],
+        "highestBid" : get_highest_bid(listing),
+        "listing" : listing,
         "owner" : owner,
         "categories" : categories
     })
@@ -79,21 +77,21 @@ def make_listing_touple(listingObjects):
     listings = []
     highestBid = None
     #looping over dicts containing the values of one listing per dict
-    for listing in listingObjects.values():
+    for listing in listingObjects:
 
         #getting the highest bid for that listing
         highestBid = get_highest_bid(listing)
 
         #adding name list and listing object list together in a list of touples
-        listings.append((listing, listing["title"].replace(" ", "_"), highestBid))
+        listings.append((listing, listing.title.replace(" ", "_"), highestBid))
         highestBid = None
 
     return listings
 
 def get_highest_bid(listing):
-    amount = listing["starting_price"]
+    amount = listing.starting_price
     highestBid = None
-    for bid in Bid.objects.filter(listing=listing["id"]):
+    for bid in Bid.objects.filter(listing=listing.id):
             try:
                 if bid.amount > amount:
                     amount = bid.amount

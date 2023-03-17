@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="container-fluid">
-    <h1>Listing: {{ data.title }}</h1>
+    <h1>Listing: {{ listing.title }}</h1>
     {% if user.is_authenticated %}
         <form action="{{ name }}" method="POST" >
             {% csrf_token %}
@@ -12,19 +12,19 @@
     {% endif %}
     
     <div class="image-div">
-        {% if data.image != "" %}
-            <img src="{{root}}{{ data.image }}"  alt="Listing Image" width="500px">
+        {% if listing.image != "" %}
+            <img src="{{root}}{{ listing.image }}"  alt="Listing Image" width="500px">
         {% else %}
             <h2>No Product Picture</h2>
         {% endif %}
     </div>
     <div>
-        <h4>{{ data.description}}</h4>
+        <h4>{{ listing.description}}</h4>
     </div>
     <div>
         <h4>
             {% if highestBid == None %}   
-                Price: {{ data.starting_price }}$
+                Price: {{ listing.starting_price }}$
             {% else %}
                 Highest Bid: {{ highestBid.amount }}$
             {% endif %}
@@ -55,7 +55,7 @@
         {% endif %}
     </div>
     <br>
-    {% if user.id == data.owner_id %}
+    {% if user.id == listing.owner_id %}
     <form action="{{ name }}" method="POST" >
         {% csrf_token %}
         {{ closeForm }}
