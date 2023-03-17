@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -9,7 +10,7 @@ from .forms import NewListingForm, WatchlistForm, BidForm
 from .models import User, Listing, Category, Bid
 
 
-
+@login_required(login_url="login")
 def new(request):
     if request.method == "POST":
         form = NewListingForm(request.POST, request.FILES)
@@ -131,7 +132,7 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
+@login_required(login_url="login")
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
@@ -192,7 +193,7 @@ def category(request, name:str):
         "listings" : listings,
         "noResults" : noResults
     })
-
+@login_required(login_url="login")
 def watchlist(request):
     noResults = False
     id = request.user.id

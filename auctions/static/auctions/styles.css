@@ -10,8 +10,3 @@ body {
 a:link {
     color: black;
 }
-
-.image {
-    max-width: 750px;
-    max-height: 500px;
-}

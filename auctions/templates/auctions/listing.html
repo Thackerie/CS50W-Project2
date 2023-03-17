@@ -3,11 +3,13 @@
 {% block body %}
 <div class="container-fluid">
     <h1>Listing: {{ data.title }}</h1>
-    <form action="{{ name }}" method="POST" >
-        {% csrf_token %}
-        {{ watchlistForm }}
-        <input type="submit" class="btn btn-secondary" value="Watchlist">
-    </form>
+    {% if user.is_authenticated %}
+        <form action="{{ name }}" method="POST" >
+            {% csrf_token %}
+            {{ watchlistForm }}
+            <input type="submit" class="btn btn-secondary" value="Watchlist">
+        </form>
+    {% endif %}
     
     <div class="image-div">
         {% if data.image != "" %}
@@ -26,7 +28,6 @@
             {% else %}
                 Highest Bid: {{ highestBid.amount }}$
             {% endif %}
-            
         </h4>
     </div>
     <div>
@@ -45,11 +46,13 @@
         </ul>
     </div>
     <div>
-        <form action="{{ name }}" method="POST">
-            {% csrf_token %}
-            {{ bidForm }}
-            <input type="submit" class="btn btn-secondary" value="Place Bid">
-        </form>
+        {% if user.is_authenticated %}
+            <form action="{{ name }}" method="POST">
+                {% csrf_token %}
+                {{ bidForm }}
+                <input type="submit" class="btn btn-secondary" value="Place Bid">
+            </form>
+        {% endif %}
     </div>
 </div>
     
