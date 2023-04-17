@@ -2,14 +2,16 @@
 
 {% block body %}
 <div class="container-fluid">
-    <h1>Listing: {{ listing.title }}</h1>
-    {% if user.is_authenticated %}
-        <form action="{{ name }}" method="POST" >
-            {% csrf_token %}
-            {{ watchlistForm }}
-            <input type="submit" class="btn btn-secondary" value="Watchlist">
-        </form>
-    {% endif %}
+    <div class="mb-2">
+        <h1>Listing: {{ listing.title }}</h1>
+        {% if user.is_authenticated %}
+            <form action="{{ name }}" method="POST" >
+                {% csrf_token %}
+                {{ watchlistForm }}
+                <input type="submit" class="btn btn-secondary" value="Watchlist">
+            </form>
+        {% endif %}
+    </div>
     
     <div class="image-div">
         {% if listing.image != "" %}

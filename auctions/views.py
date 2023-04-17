@@ -195,6 +195,7 @@ def category(request, name:str):
     #rendering the page
     return render(request,"auctions/category.html", {
         "name" : name,
+        "root" : settings.MEDIA_URL,
         "listings" : listings,
         "noResults" : noResults
     })
