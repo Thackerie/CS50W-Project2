@@ -6,8 +6,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.conf import settings
 
-from .forms import NewListingForm, WatchlistForm, BidForm, CloseForm
-from .models import User, Listing, Category, Bid
+from .forms import NewListingForm, WatchlistForm, BidForm, CloseForm, CommentForm
+from .models import User, Listing, Category, Bid, Comment
 
 
 @login_required(login_url="login")
@@ -60,12 +60,19 @@ def listing(request, name):
             listing.active = False
             listing.save(update_fields=["active"])
 
+        commentForm = CommentForm(request.POST)
+        if commentForm.is_valid():
+            content=commentForm.cleaned_data["comment"]
+            comment = Comment(author=user,content=content, listing=listing)
+            comment.save()
+        
     return render(request, "auctions/listing.html", {
         "name" : name,
         "root" : settings.MEDIA_URL,
         "watchlistForm" : WatchlistForm(),
         "bidForm" : BidForm(),
         "closeForm" : CloseForm(),
+        "commentForm" : CommentForm(),
         "highestBid" : get_highest_bid(listing),
         "listing" : listing,
         "owner" : User.objects.get(id__exact = listing.owner.id),

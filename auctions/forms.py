@@ -23,3 +23,6 @@ class BidForm(forms.Form):
 
 class CloseForm(forms.Form):
     closed = forms.BooleanField(widget=forms.HiddenInput(attrs={"value": "True", "name" : "close"}))
+
+class CommentForm(forms.Form):
+    comment = forms.CharField()

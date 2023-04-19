@@ -67,6 +67,15 @@
         <input type="submit" class="btn btn-danger" value="Close Bidding">
     </form>
     {% endif %}
+    <div>
+        <h2>Comments</h2>
+        <! Display comments !>
+        <form action="{{ name }}" method="POST" >
+            {% csrf_token %}
+            {{ commentForm }}
+            <input type="submit" class="btn btn-secondary" value="Post Comment">
+        </form>
+    </div>
 </div>
     
 {% endblock %}
