@@ -69,7 +69,11 @@
     {% endif %}
     <div>
         <h2>Comments</h2>
-        <! Display comments !>
+        <div>
+            {% for comment in comments %}
+                <h4>{{ comment.content }}</h4>
+            {% endfor %}
+        </div>
         <form action="{{ name }}" method="POST" >
             {% csrf_token %}
             {{ commentForm }}

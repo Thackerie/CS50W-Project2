@@ -33,6 +33,9 @@ def new(request):
 def listing(request, name):
     #getting listing object from name given
     listing = Listing.objects.get(title__exact = name.replace("_"," "))
+    
+    comments = Comment.objects.filter(listing=listing)
+    
     highestBid = get_highest_bid(listing)
     lowbid = False
     #handling watchlist button
@@ -77,6 +80,7 @@ def listing(request, name):
         "listing" : listing,
         "owner" : User.objects.get(id__exact = listing.owner.id),
         "categories" : listing.categories.all(),
+        "comments" : comments,
         "lowBid" : lowbid
     })
 
