@@ -71,7 +71,11 @@
         <h2>Comments</h2>
         <div>
             {% for comment in comments %}
+                Comment by {{ comment.author}}
                 <h4>{{ comment.content }}</h4>
+                {% if user.id == comment.author.id %}
+                    <h6>delete button(WIP)</h6>
+                {% endif %}
             {% endfor %}
         </div>
         <form action="{{ name }}" method="POST" >

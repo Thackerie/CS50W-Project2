@@ -41,3 +41,6 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Comments")
     content = models.CharField(max_length=200)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="Comments")
+
+    def __str__(self) -> str:
+        return f"Comment on {self.listing}  by {self.author}"
