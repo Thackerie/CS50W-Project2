@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if nolistings == True %}
+        No Listings yet
+    {% else %}
+        {% for listing in listings %}
+            <li><a href="{% url 'listing' listing.1 %}"> {{ listing.0.title }}</a></li>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

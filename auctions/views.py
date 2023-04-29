@@ -38,6 +38,7 @@ def listing(request, name):
     
     highestBid = get_highest_bid(listing)
     lowbid = False
+    
     #handling watchlist button
     if request.method == "POST":
         user = User.objects.get(username=request.user.username)
@@ -81,7 +82,8 @@ def listing(request, name):
         "owner" : User.objects.get(id__exact = listing.owner.id),
         "categories" : listing.categories.all(),
         "comments" : comments,
-        "lowBid" : lowbid
+        "lowBid" : lowbid,
+        "active": listing.active
     })
 
 def make_listing_touple(listingObjects):
@@ -210,6 +212,20 @@ def category(request, name:str):
         "listings" : listings,
         "noResults" : noResults
     })
+
+@login_required(login_url="login")
+def my_listings(request):
+    noResults = False
+    id = request.user.id
+    listingObjects = Listing.objects.filter(owner_id = id)
+    listings = make_listing_touple(listingObjects)
+    if len(listings) == 0:
+        noResults = True
+    return render(request, "auctions/watchlist.html", {
+        "listings" : listings,
+        "noResults" : noResults
+    })
+
 @login_required(login_url="login")
 def watchlist(request):
     noResults = False

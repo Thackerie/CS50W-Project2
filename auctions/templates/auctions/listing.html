@@ -3,6 +3,10 @@
 {% block body %}
 <div class="container-fluid">
     <div class="mb-2">
+        {% if active == False %}
+            <h1 style="color: red;">Bidding has ended and listing is no longer listed</h1>
+            <br>
+        {% endif %}
         <h1>Listing: {{ listing.title }}</h1>
         {% if user.is_authenticated %}
             <form action="{{ name }}" method="POST" >
